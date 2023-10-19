@@ -1,0 +1,124 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Produto {
+    private int id;
+    private String nome;
+    private double preco;
+
+    public Produto(int id, String nome, double preco) {
+        this.id = id;
+        this.nome = nome;
+        this.preco = preco;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public double getPreco() {
+        return preco;
+    }
+}
+
+class ItemCarrinho {
+    private int idProduto;
+    private int quantidade;
+
+    public ItemCarrinho(int idProduto, int quantidade) {
+        this.idProduto = idProduto;
+        this.quantidade = quantidade;
+    }
+
+    public int getIdProduto() {
+        return idProduto;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+}
+
+class Carrinho {
+    private ArrayList<ItemCarrinho> itens;
+    private double valorTotal;
+
+    public Carrinho() {
+        this.itens = new ArrayList<>();
+        this.valorTotal = 0.0;
+    }
+
+    public void adicionarItem(int idProduto, Produto[] produtos) {
+        for (Produto produto : produtos) {
+            if (produto != null && produto.getId() == idProduto) {
+                itens.add(new ItemCarrinho(idProduto, 1));  
+                valorTotal += produto.getPreco();
+            }
+        }
+    }
+
+    public ArrayList<ItemCarrinho> getItens() {
+        return itens;
+    }
+
+    public double getValorTotal() {
+        return valorTotal;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Produto[] produtos = new Produto[10];
+        produtos[0] = new Produto(1, "Produto A", 10.0);
+        produtos[1] = new Produto(2, "Produto B", 20.0);
+        produtos[2] = new Produto(3, "Produto C", 30.0);
+        produtos[3] = new Produto(4, "Produto D", 40.0);
+        produtos[4] = new Produto(5, "Produto E", 50.0);
+        produtos[5] = new Produto(6, "Produto F", 60.0);
+        produtos[6] = new Produto(7, "Produto G", 70.0);
+        produtos[7] = new Produto(8, "Produto H", 80.0);
+        produtos[8] = new Produto(9, "Produto I", 90.0);
+        produtos[9] = new Produto(10, "Produto J", 100.0);
+
+        Carrinho carrinho = new Carrinho();
+        Scanner scanner = new Scanner(System.in);
+
+        boolean continuarCompras = true;
+
+        while (continuarCompras) {
+            System.out.println("Produtos disponíveis:");
+            for (Produto produto : produtos) {
+                System.out.println("ID: " + produto.getId() + " - Nome: " + produto.getNome() + " - Preço: R$" + produto.getPreco());
+            }
+
+            System.out.print("Digite o ID do produto que deseja adicionar ao carrinho: ");
+            int idEscolhido = scanner.nextInt();
+
+            carrinho.adicionarItem(idEscolhido, produtos);
+
+            System.out.print("Deseja continuar comprando? (S/N): ");
+            String resposta = scanner.next();
+            if (resposta.equalsIgnoreCase("N")) {
+                continuarCompras = false;
+            }
+        }
+
+        System.out.println("Produtos no carrinho:");
+        ArrayList<ItemCarrinho> itensCarrinho = carrinho.getItens();
+        for (ItemCarrinho item : itensCarrinho) {
+            for (Produto produto : produtos) {
+                if (produto.getId() == item.getIdProduto()) {
+                    System.out.println("Produto: " + produto.getNome() + " - Quantidade: " + item.getQuantidade() + " - Valor: R$" + (produto.getPreco() * item.getQuantidade()));
+                }
+            }
+        }
+
+        System.out.println("Valor total do carrinho: R$" + carrinho.getValorTotal());
+
+        scanner.close();
+    }
+}
